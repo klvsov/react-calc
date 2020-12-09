@@ -60,7 +60,7 @@ const App = () => {
       } else {
         setSavedNumber(currentValue);
       }
-      setCurrentValue(savedNumber);
+      setCurrentValue(0);
     }
   };
 
@@ -76,7 +76,7 @@ const App = () => {
         return +savedNumber - +currentValue;
       });
     }
-    setCurrentValue(savedNumber);
+    setCurrentValue(0);
   };
 
   const removeValueNumber = () => {
@@ -86,11 +86,29 @@ const App = () => {
   };
 
   const getOperationHandler = (op) => {
+    setCurrentValue(0);
     setCurrentOperation(op);
+    if (currentOperation) {
+      setNextValue(currentValue);
+    }
   };
 
-  const doCalc = () => {
-    //
+  const doCalc = (op) => {
+    setCurrentValue((currentValue) => {
+      switch (op) {
+        case '+':
+          return +currentValue + +nextValue;
+        case '-':
+          return +nextValue - +currentValue;
+        case '*':
+          return +currentValue * +nextValue;
+        case '/':
+          return +nextValue / +currentValue;
+        default:
+          return NaN;
+      }
+    });
+    setNextValue(null);
   };
 
   return (
@@ -166,7 +184,12 @@ const App = () => {
         updateValue={setNumberHandler}
       />
       <Button classname="btn" label="." updateValue={setNumberFloatHandler} />
-      <ButtonCalc classname="btn btn_warning" label="=" doCalc={doCalc} />
+      <ButtonCalc
+        classname="btn btn_warning"
+        operation={currentOperation}
+        label="="
+        doCalc={doCalc}
+      />
     </div>
   );
 };

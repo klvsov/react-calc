@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Button = ({ classname, label, doCalc }) => {
+const Button = ({ classname, label, doCalc, operation }) => {
   return (
-    <button className={classname} onClick={() => doCalc(label)}>
+    <button className={classname} onClick={() => doCalc(operation)}>
       {label}
     </button>
   );
