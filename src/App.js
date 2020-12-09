@@ -4,10 +4,14 @@ import ButtonClear from './components/ButtonClear';
 import ButtonReverse from './components/ButtonReverse';
 import ButtonPercent from './components/ButtonPercent';
 import ButtonSave from './components/ButtonSave';
+import ButtonOperation from './components/ButtonOperation';
+import ButtonCalc from './components/ButtonCalc';
 
 const App = () => {
   const [currentValue, setCurrentValue] = useState(0);
   const [savedNumber, setSavedNumber] = useState(0);
+  const [currentOperation, setCurrentOperation] = useState('');
+  const [nextValue, setNextValue] = useState(null);
 
   const setNumberHandler = (n) => {
     if (!currentValue) {
@@ -49,7 +53,14 @@ const App = () => {
 
   const saveValueHandler = () => {
     if (currentValue) {
-      setSavedNumber(currentValue);
+      if (savedNumber) {
+        setSavedNumber((savedNumber) => {
+          return +savedNumber + +currentValue;
+        });
+      } else {
+        setSavedNumber(currentValue);
+      }
+      setCurrentValue(savedNumber);
     }
   };
 
@@ -59,17 +70,27 @@ const App = () => {
     }
   };
 
-  const getValueNumberAndRemove = () => {
+  const getValueNumberSub = () => {
     if (savedNumber) {
-      setCurrentValue(savedNumber);
-      setSavedNumber(0);
+      setSavedNumber((savedNumber) => {
+        return +savedNumber - +currentValue;
+      });
     }
+    setCurrentValue(savedNumber);
   };
 
   const removeValueNumber = () => {
     if (savedNumber) {
       setSavedNumber(0);
     }
+  };
+
+  const getOperationHandler = (op) => {
+    setCurrentOperation(op);
+  };
+
+  const doCalc = () => {
+    //
   };
 
   return (
@@ -90,7 +111,11 @@ const App = () => {
         label="%"
         getPercentHandler={getPercentHandler}
       />
-      <Button classname="btn btn_warning" label="/" />
+      <ButtonOperation
+        classname="btn btn_warning"
+        label="/"
+        getOperationHandler={getOperationHandler}
+      />
       <ButtonSave
         classname="btn"
         label="mc"
@@ -104,7 +129,7 @@ const App = () => {
       <ButtonSave
         classname="btn"
         label="m-"
-        saveValueHandler={getValueNumberAndRemove}
+        saveValueHandler={getValueNumberSub}
       />
       <ButtonSave
         classname="btn btn_warning"
@@ -114,22 +139,34 @@ const App = () => {
       <Button classname="btn" label="7" updateValue={setNumberHandler} />
       <Button classname="btn" label="8" updateValue={setNumberHandler} />
       <Button classname="btn" label="9" updateValue={setNumberHandler} />
-      <Button classname="btn btn_warning" label="*" />
+      <ButtonOperation
+        classname="btn btn_warning"
+        label="*"
+        getOperationHandler={getOperationHandler}
+      />
       <Button classname="btn" label="4" updateValue={setNumberHandler} />
       <Button classname="btn" label="5" updateValue={setNumberHandler} />
       <Button classname="btn" label="6" updateValue={setNumberHandler} />
-      <Button classname="btn btn_warning" label="-" />
+      <ButtonOperation
+        classname="btn btn_warning"
+        label="-"
+        getOperationHandler={getOperationHandler}
+      />
       <Button classname="btn" label="1" updateValue={setNumberHandler} />
       <Button classname="btn" label="2" updateValue={setNumberHandler} />
       <Button classname="btn" label="3" updateValue={setNumberHandler} />
-      <Button classname="btn btn_warning" label="+" />
+      <ButtonOperation
+        classname="btn btn_warning"
+        label="+"
+        getOperationHandler={getOperationHandler}
+      />
       <Button
         classname="btn btn_zero"
         label="0"
         updateValue={setNumberHandler}
       />
       <Button classname="btn" label="." updateValue={setNumberFloatHandler} />
-      <Button classname="btn btn_warning" label="=" />
+      <ButtonCalc classname="btn btn_warning" label="=" doCalc={doCalc} />
     </div>
   );
 };
